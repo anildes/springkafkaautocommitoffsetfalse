@@ -1,0 +1,76 @@
+info:
+  component: Demo Kafka Service
+
+server:
+  port: ${PORT:8080}
+
+spring:
+  cloud:
+    stream:
+      kafka:
+        bindings:
+          customInput:
+           consumer:
+            autoCommitOffset: false
+            autoCommitOnError: false # by default it it same as enableDlq
+            enableDlq: true
+            dlqName: exceptions-out
+
+      bindings:
+        input:
+          destination: demo.topic
+          content-type: application/text
+          group: demoConsumer
+          binder: kafka1
+        output:
+          destination: demo.topic
+          binder: kafka1
+        customInput:
+          destination: demo.custom.topic
+          content-type: application/text
+          group: demoCustomConsumer
+          binder: kafka1
+        customOutput:
+          destination: demo.custom.topic1
+          binder: kafka1
+
+      binders:
+        kafka1:
+          type: kafka
+          environment:
+            spring:
+              cloud:
+                stream:
+                  kafka:
+                    binder:
+                      brokers: ${KAFKA_BROKERS:localhost}
+#       this allows multiple bindings to more that one cluster group
+#        kafka2:
+#          type: kafka
+#          environment:
+#            spring:
+#              cloud:
+#                stream:
+#                  kafka:
+#                    binder:
+#                      brokers: ${KAFKA2_BROKERS:localhost}
+  kafka:
+    admin:
+      fail-fast: true
+      properties:
+        request.timeout.ms: 10000  # time to wait for broker to connect if your see this error [AdminClient] Broker may not be available
+        retries: 0  # how many times to retry
+
+    listener:
+      poll-timeout: 1000
+
+#Setting logging levels
+logging:
+  level:
+    com.netflix: WARN
+    org.springframework.web: WARN
+    com.softvision: DEBUG
+
+
+
+
