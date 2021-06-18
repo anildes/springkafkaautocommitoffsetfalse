@@ -25,7 +25,7 @@
 		<spring-cloud.version>Germantown.RELEASE</spring-cloud.version>
 
         <version.springfox>2.9.2</version.springfox>
-        <version.swagger>1.5.18</version.swagger>
+        <version.swagger>1.6.2</version.swagger>
 	</properties>
 
 	<dependencies>
